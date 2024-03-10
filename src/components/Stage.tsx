@@ -1,29 +1,32 @@
-import React from 'react';
-import styled from 'styled-components';
-import Task from './Task';
-import { task } from './Kanban';
+import React from "react";
+import styled from "styled-components";
+import Task from "./Task";
+import { task } from "./Kanban";
 
-const StyledStage = styled.div`
-`
+const StyledStage = styled.div``;
 
-const Stage = (props: any) => {
-    return (
-        <StyledStage>
-            <h2>
-                {props.title}
-            </h2>
+type StageProps = {
+  title: string;
+  tasks: task[];
+};
 
-            <ul>
-                {
-                  props.tasks && props.tasks
-                  .filter((task: task) => task.stage === props.title)
-                  .map((task: task, index: number)=>(
-                    <Task key={index} task={task} />
-                  ))
-                }
-            </ul>
-        </StyledStage>
-    )
-}
+const Stage = (props: StageProps) => {
+  return (
+    <StyledStage>
+      <h2>{props.title}</h2>
 
-export default Stage
+      <ul>
+        {props.tasks &&
+          props.tasks
+            .filter((task: task) => task.stage === props.title)
+            .map((task: task, index: number) => (
+              <div key={index}>
+                <Task task={task} />
+              </div>
+            ))}
+      </ul>
+    </StyledStage>
+  );
+};
+
+export default Stage;
