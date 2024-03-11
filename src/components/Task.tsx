@@ -11,7 +11,7 @@ type TaskProps = {
 const Task = (props: TaskProps) => {
   return (
     <StyledTask>
-      <li>{props.task.taskName}</li>
+      <div>{props.task.taskName}</div>
     </StyledTask>
   );
 };

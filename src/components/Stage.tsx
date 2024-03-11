@@ -3,7 +3,24 @@ import styled from "styled-components";
 import Task from "./Task";
 import { task } from "./Kanban";
 
-const StyledStage = styled.div``;
+const StyledStage = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    display: flex;
+    justify-content: center;
+  }
+
+  .juanTask {
+    display: flex;
+    justify-content: center;
+  }
+
+  ul {
+    list-style-type: none;
+  }
+`;
 
 type StageProps = {
   title: string;
@@ -20,8 +37,10 @@ const Stage = (props: StageProps) => {
           props.tasks
             .filter((task: task) => task.stage === props.title)
             .map((task: task, index: number) => (
-              <div key={index}>
-                <Task task={task} />
+              <div key={index} className="juanTask">
+                <li>
+                  <Task task={task} />
+                </li>
               </div>
             ))}
       </ul>
