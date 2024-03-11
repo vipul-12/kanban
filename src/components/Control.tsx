@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { TaskObject } from "./Kanban";
 
 const StyledControl = styled.div`
   display: flex;
@@ -8,17 +9,22 @@ const StyledControl = styled.div`
 
 type ControlProps = {
   addTask: (title: string) => void;
+  taskStageChangeHandler: (
+    task: TaskObject | undefined,
+    action: string
+  ) => void;
+  selectedTask: TaskObject | undefined;
 };
 
 type ControlState = {
   createTask: string;
-  selectedTask: string;
+  currentTask: TaskObject | undefined;
 };
 
 const Control = (props: ControlProps) => {
   const [state, setState] = useState<ControlState>({
     createTask: "",
-    selectedTask: "",
+    currentTask: undefined,
   });
 
   const onTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +43,34 @@ const Control = (props: ControlProps) => {
     }));
   };
 
+  const onMoveAheadHandler = () => {
+    console.log("inside onmove ahead")
+    props.taskStageChangeHandler(state.currentTask, "moveAhead");
+
+    setState((state: ControlState) => ({
+      ...state,
+      currentTask: undefined,
+    }));
+  };
+
+  const onMoveBehindHandler = () => {
+    props.taskStageChangeHandler(state.currentTask, "moveBehind");
+
+    setState((state: ControlState) => ({
+      ...state,
+      currentTask: undefined,
+    }));
+  };
+
+  const onDeleteHandler = () => {};
+
+  useEffect(() => {
+    setState((state: ControlState) => ({
+      ...state,
+      currentTask: props.selectedTask,
+    }));
+  }, [props.selectedTask]);
+
   return (
     <StyledControl>
       <div>
@@ -50,13 +84,13 @@ const Control = (props: ControlProps) => {
 
       <div>
         <input
-          value={state.selectedTask}
-          placeholder="Selected Task"
+          value={state.currentTask?.taskName ?? ""}
+          placeholder={props.selectedTask?.taskName ?? "Selected Task"}
           readOnly
         />
-        <button>Move Ahead</button>
-        <button>Move Back</button>
-        <button>Delete</button>
+        <button onClick={onMoveAheadHandler}>Move Ahead</button>
+        <button onClick={onMoveBehindHandler}>Move Back</button>
+        <button onClick={onDeleteHandler}>Delete</button>
       </div>
     </StyledControl>
   );

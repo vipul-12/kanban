@@ -1,11 +1,10 @@
-import React from "react";
 import styled from "styled-components";
-import { task } from "./Kanban";
+import { TaskObject } from "./Kanban";
 
 const StyledTask = styled.div``;
 
 type TaskProps = {
-  task: task;
+  task: TaskObject;
 };
 
 const Task = (props: TaskProps) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Task from "./Task";
-import { task } from "./Kanban";
+import { TaskObject } from "./Kanban";
 
 const StyledStage = styled.div`
   display: flex;
@@ -15,6 +15,7 @@ const StyledStage = styled.div`
   .juanTask {
     display: flex;
     justify-content: center;
+    cursor: pointer;
   }
 
   ul {
@@ -24,10 +25,14 @@ const StyledStage = styled.div`
 
 type StageProps = {
   title: string;
-  tasks: task[];
+  tasks: TaskObject[];
+  selectTask: (task: TaskObject) => void;
 };
 
 const Stage = (props: StageProps) => {
+  const onStageClick = (task: TaskObject) => {
+    props.selectTask(task);
+  };
   return (
     <StyledStage>
       <h2>{props.title}</h2>
@@ -35,9 +40,15 @@ const Stage = (props: StageProps) => {
       <ul>
         {props.tasks &&
           props.tasks
-            .filter((task: task) => task.stage === props.title)
-            .map((task: task, index: number) => (
-              <div key={index} className="juanTask">
+            .filter((task: TaskObject) => task.stage === props.title)
+            .map((task: TaskObject, index: number) => (
+              <div
+                key={index}
+                className="juanTask"
+                onClick={() => {
+                  onStageClick(task);
+                }}
+              >
                 <li>
                   <Task task={task} />
                 </li>
