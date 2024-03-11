@@ -53,6 +53,17 @@ const Kanban = () => {
     }));
   };
 
+  const deleteTask = (task: TaskObject) => {
+    let newTasks: TaskObject[] = state.tasks.filter(
+      (item: TaskObject) => task.taskName != item.taskName
+    );
+
+    setState((state: KanbanState) => ({
+      ...state,
+      tasks: newTasks,
+    }));
+  };
+
   const selectTask = (task: TaskObject) => {
     // console.log("stage clicked inside Kanban", task);
     setState((state: KanbanState) => ({
@@ -111,53 +122,48 @@ const Kanban = () => {
     };
   };
 
-  const taskStageChangeHandler = (
-    task: TaskObject | undefined,
-    action: string
-  ) => {
-    if (task) {
-      var updatedTask: TaskObject;
-      switch (action) {
-        case "moveAhead":
-          if (task.stageId < 3) {
-            let findIncrementTask = state.tasks.find(
-              (item: TaskObject) => item.taskName === task.taskName
-            );
+  const taskStageChangeHandler = (task: TaskObject, action: string) => {
+    var updatedTask: TaskObject;
+    switch (action) {
+      case "moveAhead":
+        if (task.stageId < 3) {
+          let findIncrementTask = state.tasks.find(
+            (item: TaskObject) => item.taskName === task.taskName
+          );
 
-            if (findIncrementTask) {
-              updatedTask = incrementStage(findIncrementTask);
-            }
+          if (findIncrementTask) {
+            updatedTask = incrementStage(findIncrementTask);
           }
-          break;
-        case "moveBehind":
-          if (task.stageId >= 0) {
-            let findDecrementTask = state.tasks.find(
-              (item: TaskObject) => item.taskName === task.taskName
-            );
-
-            if (findDecrementTask) {
-              updatedTask = decrementStage(findDecrementTask);
-            }
-          }
-          break;
-
-        default:
-          break;
-      }
-
-      let newTasks: TaskObject[] = state.tasks.map((item: TaskObject) => {
-        if (item.taskName === updatedTask.taskName) {
-          return updatedTask;
-        } else {
-          return item;
         }
-      });
+        break;
+      case "moveBehind":
+        if (task.stageId >= 0) {
+          let findDecrementTask = state.tasks.find(
+            (item: TaskObject) => item.taskName === task.taskName
+          );
 
-      setState((state: KanbanState) => ({
-        ...state,
-        tasks: newTasks,
-      }));
+          if (findDecrementTask) {
+            updatedTask = decrementStage(findDecrementTask);
+          }
+        }
+        break;
+
+      default:
+        break;
     }
+
+    let newTasks: TaskObject[] = state.tasks.map((item: TaskObject) => {
+      if (item.taskName === updatedTask.taskName) {
+        return updatedTask;
+      } else {
+        return item;
+      }
+    });
+
+    setState((state: KanbanState) => ({
+      ...state,
+      tasks: newTasks,
+    }));
   };
 
   return (
@@ -167,6 +173,7 @@ const Kanban = () => {
         addTask={addTask}
         selectedTask={state.selectedTask}
         taskStageChangeHandler={taskStageChangeHandler}
+        deleteTask={deleteTask}
       />
       <div className="grid">
         {stages.map((item: string, index: number) => (

@@ -9,10 +9,8 @@ const StyledControl = styled.div`
 
 type ControlProps = {
   addTask: (title: string) => void;
-  taskStageChangeHandler: (
-    task: TaskObject | undefined,
-    action: string
-  ) => void;
+  deleteTask: (task: TaskObject) => void;
+  taskStageChangeHandler: (task: TaskObject, action: string) => void;
   selectedTask: TaskObject | undefined;
 };
 
@@ -44,8 +42,8 @@ const Control = (props: ControlProps) => {
   };
 
   const onMoveAheadHandler = () => {
-    console.log("inside onmove ahead")
-    props.taskStageChangeHandler(state.currentTask, "moveAhead");
+    state.currentTask &&
+      props.taskStageChangeHandler(state.currentTask, "moveAhead");
 
     setState((state: ControlState) => ({
       ...state,
@@ -54,7 +52,8 @@ const Control = (props: ControlProps) => {
   };
 
   const onMoveBehindHandler = () => {
-    props.taskStageChangeHandler(state.currentTask, "moveBehind");
+    state.currentTask &&
+      props.taskStageChangeHandler(state.currentTask, "moveBehind");
 
     setState((state: ControlState) => ({
       ...state,
@@ -62,7 +61,14 @@ const Control = (props: ControlProps) => {
     }));
   };
 
-  const onDeleteHandler = () => {};
+  const onDeleteHandler = () => {
+    state.currentTask && props.deleteTask(state.currentTask);
+
+    setState((state: ControlState) => ({
+      ...state,
+      currentTask: undefined,
+    }));
+  };
 
   useEffect(() => {
     setState((state: ControlState) => ({
@@ -88,8 +94,18 @@ const Control = (props: ControlProps) => {
           placeholder={props.selectedTask?.taskName ?? "Selected Task"}
           readOnly
         />
-        <button onClick={onMoveAheadHandler}>Move Ahead</button>
-        <button onClick={onMoveBehindHandler}>Move Back</button>
+        <button
+          onClick={onMoveAheadHandler}
+          disabled={state.currentTask?.stageId === 3}
+        >
+          Move Ahead
+        </button>
+        <button
+          onClick={onMoveBehindHandler}
+          disabled={state.currentTask?.stageId === 0}
+        >
+          Move Back
+        </button>
         <button onClick={onDeleteHandler}>Delete</button>
       </div>
     </StyledControl>
