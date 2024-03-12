@@ -8,6 +8,7 @@ const StyledKanban = styled.div`
     display: flex;
     justify-content: center;
   }
+
   .grid {
     display: flex;
     justify-content: center;

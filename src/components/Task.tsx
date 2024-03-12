@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { TaskObject } from "./Kanban";
 
-const StyledTask = styled.div``;
+const StyledTask = styled.div`
+  padding: 0.5rem;
+`;
 
 type TaskProps = {
   task: TaskObject;
