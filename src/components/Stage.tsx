@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Task from "./Task";
 import { TaskObject } from "./Kanban";
@@ -7,26 +7,28 @@ const StyledStage = styled.div`
   display: flex;
   flex-direction: column;
 
-  border: 0.1rem solid;
-  border-radius: 1rem;
-
   .heading {
     border-radius: 1rem;
     &.Backlog {
-      background-color: pink;
+      background-color: #be515a;
     }
 
     &.Doing {
-      background-color: yellow;
+      background-color: #c0b515;
     }
 
     &.Review {
-      background-color: green;
+      background-color: #64c22e;
     }
 
     &.Done {
-      background-color: blue;
+      background-color: #34c4f0;
     }
+  }
+
+  .stageBody {
+    background-color: #dfd7d7;
+    border-radius: 1rem;
   }
 
   h2 {
@@ -38,6 +40,10 @@ const StyledStage = styled.div`
     display: flex;
     justify-content: center;
     cursor: pointer;
+    font-weight: 500;
+    &:hover {
+      color: #0314fd;
+    }
   }
 
   ul {
@@ -51,7 +57,23 @@ type StageProps = {
   selectTask: (task: TaskObject) => void;
 };
 
+type StageState = {
+  hasElements: boolean;
+};
 const Stage = (props: StageProps) => {
+  const [state, setState] = useState<StageState>({
+    hasElements: false,
+  });
+
+  useEffect(() => {
+    setState((state: StageState) => ({
+      ...state,
+      hasElements: props.tasks.some(
+        (item: TaskObject) => props.title === item.stage
+      ),
+    }));
+  }, [props]);
+
   const onStageClick = (task: TaskObject) => {
     props.selectTask(task);
   };
@@ -60,10 +82,10 @@ const Stage = (props: StageProps) => {
       <div className={`heading ${props.title}`}>
         <h2>{props.title}</h2>
       </div>
-      <div>
-        <ul>
-          {props.tasks &&
-            props.tasks
+      {state.hasElements && (
+        <div className="stageBody">
+          <ul>
+            {props.tasks
               .filter((task: TaskObject) => task.stage === props.title)
               .map((task: TaskObject, index: number) => (
                 <div
@@ -78,8 +100,9 @@ const Stage = (props: StageProps) => {
                   </li>
                 </div>
               ))}
-        </ul>
-      </div>
+          </ul>
+        </div>
+      )}
     </StyledStage>
   );
 };

@@ -4,9 +4,22 @@ import Control from "./Control";
 import Stage from "./Stage";
 
 const StyledKanban = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: #186264ff;
+  height: 100vh;
+
   h1 {
     display: flex;
     justify-content: center;
+    color: #ffffff;
+    text-shadow: 2px 3px 6px black;
+  }
+
+  .controlPanel {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
   }
 
   .grid {
@@ -40,23 +53,28 @@ const Kanban = () => {
   });
 
   const addTask = (title: string) => {
-    const newTaskObject: TaskObject = {
-      taskName: title,
-      stage: "Backlog",
-      stageId: 0,
-    };
+    const check: boolean = state.tasks.some(
+      (item: TaskObject) => item.taskName === title
+    );
+    if (title !== "" && !check) {
+      const newTaskObject: TaskObject = {
+        taskName: title,
+        stage: "Backlog",
+        stageId: 0,
+      };
 
-    let newTasks: TaskObject[] = state.tasks.concat(newTaskObject);
+      let newTasks: TaskObject[] = state.tasks.concat(newTaskObject);
 
-    setState((state: KanbanState) => ({
-      ...state,
-      tasks: newTasks,
-    }));
+      setState((state: KanbanState) => ({
+        ...state,
+        tasks: newTasks,
+      }));
+    }
   };
 
   const deleteTask = (task: TaskObject) => {
     let newTasks: TaskObject[] = state.tasks.filter(
-      (item: TaskObject) => task.taskName != item.taskName
+      (item: TaskObject) => task.taskName !== item.taskName
     );
 
     setState((state: KanbanState) => ({
@@ -169,13 +187,15 @@ const Kanban = () => {
 
   return (
     <StyledKanban>
-      <h1>Kanban Board</h1>
-      <Control
-        addTask={addTask}
-        selectedTask={state.selectedTask}
-        taskStageChangeHandler={taskStageChangeHandler}
-        deleteTask={deleteTask}
-      />
+      <h1>KANBAN BOARD</h1>
+      <div className="controlPanel">
+        <Control
+          addTask={addTask}
+          selectedTask={state.selectedTask}
+          taskStageChangeHandler={taskStageChangeHandler}
+          deleteTask={deleteTask}
+        />
+      </div>
       <div className="grid">
         {stages.map((item: string, index: number) => (
           <div className="column" key={index}>

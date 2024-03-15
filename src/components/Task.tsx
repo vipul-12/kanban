@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { TaskObject } from "./Kanban";
 
 const StyledTask = styled.div`
-  padding: 0.5rem;
+  display: flex;
 `;
 
 type TaskProps = {

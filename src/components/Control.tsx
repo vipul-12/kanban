@@ -5,6 +5,25 @@ import { TaskObject } from "./Kanban";
 const StyledControl = styled.div`
   display: flex;
   flex-direction: column;
+
+  .createTaskControl {
+    padding: 0.3rem;
+  }
+
+  .myButton {
+    cursor: pointer;
+    border-radius: 3rem;
+    border-style: none;
+    background-color: #ffffff;
+    color: #3c4043;
+
+    font-size: 14px;
+    font-weight: 500;
+    // height: 48px;
+    justify-content: center;
+    letter-spacing: 0.25px;
+    text-align: center;
+  }
 `;
 
 type ControlProps = {
@@ -79,34 +98,44 @@ const Control = (props: ControlProps) => {
 
   return (
     <StyledControl>
-      <div>
+      <div className="createTaskControl">
         <input
           value={state.createTask}
           onChange={onTextChange}
           placeholder="Enter New Task"
         />
-        <button onClick={createTaskHandler}>Create</button>
+        <button onClick={createTaskHandler} className="myButton">
+          Create
+        </button>
       </div>
 
-      <div>
-        <input
-          value={state.currentTask?.taskName ?? ""}
-          placeholder={props.selectedTask?.taskName ?? "Selected Task"}
-          readOnly
-        />
-        <button
-          onClick={onMoveAheadHandler}
-          disabled={state.currentTask?.stageId === 3}
-        >
-          Move Ahead
-        </button>
-        <button
-          onClick={onMoveBehindHandler}
-          disabled={state.currentTask?.stageId === 0}
-        >
-          Move Back
-        </button>
-        <button onClick={onDeleteHandler}>Delete</button>
+      <div className="editTaskControl">
+        <div>
+          <input
+            value={state.currentTask?.taskName ?? ""}
+            placeholder={props.selectedTask?.taskName ?? "Selected Task"}
+            readOnly
+          />
+        </div>
+        <div>
+          <button
+            onClick={onMoveAheadHandler}
+            disabled={state.currentTask?.stageId === 3}
+            className="myButton"
+          >
+            Move Ahead
+          </button>
+          <button
+            onClick={onMoveBehindHandler}
+            disabled={state.currentTask?.stageId === 0}
+            className="myButton"
+          >
+            Move Back
+          </button>
+          <button onClick={onDeleteHandler} className="myButton">
+            Delete
+          </button>
+        </div>
       </div>
     </StyledControl>
   );
